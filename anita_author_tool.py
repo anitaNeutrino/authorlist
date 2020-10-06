@@ -184,6 +184,34 @@ for key in sorted_institutes:
 
 f_revtex_institutes.close()
 
+# aas_authors.tex 
+f_aas_authors = open(prefix + "aas_authors.tex","w")
+f_aas_authors.write("%% Collaboration author file for %s in aas format\n" % (collaboration)) 
+f_aas_authors.write("%% \\input this file in main body (make sure you also do the institutes file in the preamble!) \n\n" ) 
+
+for author in authors: 
+  name = author[0].replace(" ","~")
+  f_aas_authors.write("\\author{%s}" % (name)) 
+  if author[1] is not None: 
+    for aff in author[1]: 
+      f_aas_authors.write("\n\\at%s" % (aff)) 
+  f_aas_authors.write("\n") 
+
+f_aas_authors.write("\\collaboration{1000}{%s Collaboration}\n" % (collaboration)); 
+f_aas_authors.close()
+
+
+# aas_institutes.tex 
+f_aas_institutes = open(prefix + "aas_institutes.tex","w")
+f_aas_institutes.write("%% Collaboration institute file for %s in aas format\n" % (collaboration)) 
+f_aas_institutes.write("%% \\input this file in the preamble (make sure you also do the author file in the body!) \n\n") 
+
+for key in sorted_institutes: 
+  addr = tex_escape(institutes[key][0]) ; 
+  f_aas_institutes.write("\\newcommand{\\at%s}{\\affiliation{%s}}\n" % (key, addr)); 
+
+f_aas_institutes.close()
+
 
 
 #elsarticle_authors.tex 
