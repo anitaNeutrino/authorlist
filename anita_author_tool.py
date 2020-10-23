@@ -68,6 +68,11 @@ authors = []
 sorted_institutes = [] 
 institute_numbers = {}
 
+letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+institute_letters = {}
+
+
+
 for line in fauth.readlines(): 
   line = line.strip()
   lineno+=1 
@@ -91,10 +96,10 @@ for line in fauth.readlines():
       if aff not in sorted_institutes: 
         sorted_institutes.append(aff) 
         institute_numbers[aff] = len(sorted_institutes) 
+        institute_letters[aff] = letters[len(sorted_institutes)-1]
       affiliations.append(aff) 
 
   authors.append((author,affiliations)) 
-
 
 
 
@@ -239,6 +244,36 @@ for author in authors:
   f_elsarticle_authors.write("\\author[%s]{%s}\n" % (affs,name)) 
 
 f_elsarticle_authors.close()
+
+#sissa_authors.tex 
+
+f_sissa_authors = open(prefix + "sissa_authors.tex","w"); 
+
+f_sissa_authors.write("%% authorlist for elsarticle publications for %s collaboration\n\n" % (collaboration) ); 
+
+
+for author in authors: 
+  name = author[0].replace(" ","~")
+  affs = "" 
+  for aff in author[1]: 
+    if affs != "": 
+      affs += ","
+    affs += str(institute_letters[aff])
+  f_sissa_authors.write("\\author[%s]{%s}\n" % (affs,name)) 
+
+
+f_sissa_authors.write("\n\n"); 
+
+for key in sorted_institutes: 
+  letter = institute_letters[key]; 
+  addr = tex_escape(institutes[key][0]) ; 
+  f_sissa_authors.write("\\affiliation[%s]{%s}\n" % (letter, addr)); 
+
+f_sissa_authors.write("\n\n"); 
+f_sissa_authors.write("\\collaboration{%s Collaboration}\n\n" % (collaboration)); 
+
+f_sissa_authors.close()
+
 
 
 # pos_authors.tex 
